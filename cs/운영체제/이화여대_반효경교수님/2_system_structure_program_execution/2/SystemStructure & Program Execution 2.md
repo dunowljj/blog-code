@@ -45,9 +45,9 @@ SystemStructure & Program Execution 1
 - Memory Mapped I/O에 의해 통제된다.
 
 # 2. 저장장치 계층 구조
-<p align="center">
+<!-- <p align="center"> -->
 <img src ="./images/storage_layer.png" style="margin:10;" width=900px height=600px alt=storage1>  
-<p>  
+<!-- <p>   -->
 
 ## 2.1. Primary(Executable) vs Secondary
 맨위에 사실상 CPU가 있다고 생각하고 그림을 살펴보자.
@@ -70,9 +70,9 @@ SystemStructure & Program Execution 1
 
 
 # 3. 프로그램의 실행 (메모리 load)
-<p align="center">
+<!-- <p align="center"> -->
 <img src ="./images/cache_memory1.png" style="margin:10;" width=900px height=600px alt=storage1>  
-<p>  
+<!-- <p>   -->
 
 ## 3.1. 가상메모리
 실행파일을 실행시키면, 메모리에 올라와서 프로세스가 된다. 그런데 그 전에 중간에 가상메모리를 거쳐서 간다. 가상메모리는 각 프로그램이 가진 독자적인 공간이다. 특정 프로그램을 실행 시, 위 그림처럼 0번 부터 시작하는 독자적인 메모리 주소 공간(address space)을 차지한다.
@@ -114,8 +114,8 @@ SystemStructure & Program Execution 1
 사용자 정의 함수나 라이브러리 함수는 프로그램 안에 들어있지만, 커널 함수는 그렇지 않다. 논리적 메모리 주소에서 사실상 점프를 하는데, 커널은 주소를 바로 점플 불가능해서 시스템콜을 해야 한다.
 
 ## 3.4. 프로그램의 실행
-<p align="center">
+<!-- <p align="center"> -->
 <img src ="./images/program1.png" style="margin:10;" width=800px height=530px alt=storage1>  
-<p>  
+<!-- <p>   -->
 
 결국에는 유저모드 - 커널모드를 반복하며 실행된다. 중간에 사용자정의 함수, 라이브러리 함수가 호출되면서 시스템콜을 하면 운영체제로 전환된다.
