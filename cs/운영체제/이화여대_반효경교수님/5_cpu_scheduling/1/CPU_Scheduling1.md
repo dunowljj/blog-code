@@ -25,16 +25,85 @@ CPU Scheduler
 Dispatcher
 - CPU의 제어권을 CPU scheduler에 의해 선택된 프로세스에게 넘긴다. (문맥 교환)
   
+비선점형(nonpreemptive) 일단 cpu 주면 뺏지 않음
+선점형(preemptive) cpu 줬다 뺐기 가능
+
 # 2. 스케줄링 성능 척도
-1. CPU utilization(이용률))
+## 2.1. 시스템 입장 성능 척도
+1. CPU utilization(이용률)
+- 전체 시간 중 cpu가 일한 시간 비율 -> 쉬게 하지 않아야 잘 쓰는 것
 2. Throughput(처리량)
+- 주어진 시간동안 몇개의 작업을 완료했는지 -> 주어진 시간동안 많이 처리하면 좋다.
+
+## 2.2. 프로그램(프로세스) 입장 성능척도
+빨리 쓰고 I/O 하러 가는 것, 시간이 빨리 처리되어야
+
 3. Turnaround time(소요시간, 반환시간)
+- cpu를 쓰러 들어와서 다 쓰고 나갈때까지 시간
+- 프로세스의 시작과 종료 시간 아님
 4. Waiting time(대기 시간)
+- ready queue에서 기다리는 시간만 이야기 할 때
 5. Response time(응답 시간)
+- cpu 쓰러 들어와서 처음으로 cpu 얻기까지의 시간
++ 라운드로빈을 생각해보면, 여러번 기다리는 시간을 모두 합친 것이 waiting time, 처음으로 얻기까지를 response time으로 구분할 수 있다.
++ burst마다로 생각하기
+
+## 시간 관련하여 3개씩이나 있는 이유?
+- 응답시간 : 처음으로 cpu얻는 순간이 사용자 응답과 관련해서 중요한 개념이다.
 
 # 3. 대표적인 CPU Scheduling
-## 3.1. FCFS
-## 3.2. SJF
-## 3.3. Priority Scheduling
+## 3.1. FCFS(First-Come First-Served)
+- 단순하게 먼저온 순서대로 처리
+- 비선점형 스케줄링 (먼저온 작업 처리하고 넘어감)
+### 특징
+- 먼저 온 작업에 따라 기다리는 시간이 차이가 크다.
+    - 먼저 온 작업들의 소요시간이 길면 전체 대기시간이 커진다. -> Convoy effect : 긴 프로세스 뒤에 작은프로세스는 무작정 기다려야한다.
+    - 먼저 온 작업들의 소요시간이 짧으면 대기 시간이 훨신 짧아진다.
+
+## 3.2. SJF(Shortest)
+- 가장 짧은 프로세스를 제일 먼저 스케줄
+- 가장 짧은 평균 대기시간 보장 -> Preemptive인 경우
+### Nonpreemptive
+- 이미 cpu 줬다면, 도중에 더 짧은 작업이와도 cpu를 뺏지 않는다.
+- 작업이 끝나는 시점마다 스케줄링 일어남
+### Preemptive
+- 현재 남은 burst time 보다 더 짧은 작업 오면 cpu 뺏김.
+- Shortest-Remaining-Time-First(SRTF)라고도 부름
+- 언제든지 스케줄링이 일어날 수 있다.
+### 문제점
+- Starvation(기아 현상) : 짧은 프로세스가 많으면, 긴 프로세스에 도달할 수 없다.
+- 실제 사용하기에 문제. cpu 사용량을 미리 알 수 없다. cpu를 넘겨받은 시점에 어느 시점에 cpu를 넘겨줄지 모른다. 정확하진 않지만, 과거를 이용해 추정할 수 있다. 그렇다면 과거를 통해 미래를 어떻게 예측할까?
+
 ### Exponential Averaging
+<img src='./images/exponential_aver.png' height="400px" width="700px">  
+
+- t는 실제 cpu 사용 시간 타우는 예측하는 시간
+- 과거의 t1~tn까지 cpu 사용시간이 주어진 상황에서 타우n+1예측
+- 마지막 정의에 타우n에 값을 계속 대입하면 타우0만 남게됨
+- 최근에 있었던 값이 가중치를 더 가지게 됨(최근값을 더 많이 반영).
+
+
+## 3.3. Priority Scheduling
+- 우선순위가 높은 프로세스에게 cpu 할당
+- 정수값으로 우선순위 표현. 보통 작은 숫자가 우선순위가 높다.
+- SJF도 priority scheduling의 일종
+### 선점형 vs 비선점형
+SJF처럼 선점형, 비선점형 모두 있음. 중간에 우선순위가 높은 프로세스가 들어오면 넘겨줄 것인가에 따른 차이
+### Starvation 문제
+- 보완 : Againg 사용 -> 우선순위가 낮은 프로세스도 오래 기다리면 우선순위를 높여준다.
+
+
 ## 3.4. Round Robin (RR)
+- 각 프로세스는 동일한 크기의 할당 시간(time quantum)을 가짐 (일반적으로 10-100 milliseconds)
+- 할당 시간이 끝나면 프로세스는 선점당하고 ready queue에 줄을 다시 선다.
+- 어떤 프로세스도 (n-1)q time unit이상 기다리지 않는다.
+### 특징
+-  **빠른 응답 시간**이 **장점**이다. 균등하게 분할하기 떄문에 짧은 프로세스 빨리 끝난다. 
+- 대기시간이 자신이 cpu를 사용하는 양에 비례함
+### time quantum에 의한 Performance
+- q large => FCFS
+- q small => context switch 오버헤드가 커진다.
++ 결국에는 적당한 크기의 time quantum을 지정해야 한다.
+### 특이한 예시(안좋은 경우))
+- 만약 cpu 사용시간이 모두 동일한 프로세스들만 있다면, 마지막까지 작업이 완료되지 못하다가 동시에 작업이 해결된다. 
+- 이런 경우에는 오히려 time quantum이 크면 average Turnaround time이 짧아진다.
