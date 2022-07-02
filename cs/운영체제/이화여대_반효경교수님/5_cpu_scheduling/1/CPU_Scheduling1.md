@@ -3,7 +3,8 @@ CPU_Scheduling1
 이화여자대학교 반효경 교수님의 운영체제 강의를 요약한 내용입니다. 틀린 부분이 있다면 지적해주시면 감사하겠습니다.  [강의 링크](http://www.kocw.net/home/cview.do?cid=4b9cd4c7178db077)
 
 # 1. CPU 스케줄링이란?
-CPU 스케줄링은 ready queue에 대기하는 프로세스 중 누구에게 cpu를 줄 것인가를 결정하는 작업이라고 한다.   
+CPU 스케줄링은 ready queue에 대기하는 프로세스 중 누구에게 cpu를 줄 것인가를 결정하는 작업이라고 한다.   컴퓨터 시스템 안에 있는 job들이 I/O bound job과 CPU bound job이 섞여 있어서 스케줄링이 필요하다.
+
 크게 두 가지 이슈로 보자면, **먼저,** 당장 어떤 프로세스에게 cpu를 줄 것인지를 결정해야 한다. 그리고 **특정 프로그램에 cpu를 준 다음에는** cpu를 특정 시점에 가져갈 것인지, 해당 작업을 끝낼때까지 기다릴 것인지도 결정을 해야한다.
 
 ## 1.1. CPU burst, I/O burst
@@ -29,13 +30,13 @@ Dispatcher
 선점형(preemptive) cpu 줬다 뺐기 가능
 
 # 2. 스케줄링 성능 척도
-## 2.1. 시스템 입장 성능 척도
+### 시스템 입장 성능 척도
 1. CPU utilization(이용률)
 - 전체 시간 중 cpu가 일한 시간 비율 -> 쉬게 하지 않아야 잘 쓰는 것
 2. Throughput(처리량)
 - 주어진 시간동안 몇개의 작업을 완료했는지 -> 주어진 시간동안 많이 처리하면 좋다.
 
-## 2.2. 프로그램(프로세스) 입장 성능척도
+### 프로그램(프로세스) 입장 성능척도
 빨리 쓰고 I/O 하러 가는 것, 시간이 빨리 처리되어야
 
 3. Turnaround time(소요시간, 반환시간)
@@ -75,7 +76,7 @@ Dispatcher
 - 실제 사용하기에 문제. cpu 사용량을 미리 알 수 없다. cpu를 넘겨받은 시점에 어느 시점에 cpu를 넘겨줄지 모른다. 정확하진 않지만, 과거를 이용해 추정할 수 있다. 그렇다면 과거를 통해 미래를 어떻게 예측할까?
 
 ### Exponential Averaging
-<img src='./images/exponential_aver.png' height="400px" width="700px">  
+<img src='./images/exponential_aver.png' height="600px" width="850px">  
 
 - t는 실제 cpu 사용 시간 타우는 예측하는 시간
 - 과거의 t1~tn까지 cpu 사용시간이 주어진 상황에서 타우n+1예측
