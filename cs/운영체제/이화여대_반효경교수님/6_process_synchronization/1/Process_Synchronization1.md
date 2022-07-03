@@ -10,7 +10,7 @@ Process_Synchronization1
 - 데이터 저장된 곳에서 연산할 데이터를 받아서 다시 결과를 전달해줌
     - 누가 먼저 읽어왔는가에 따라 결과가 달라질 수 있다.
     - process_sychronization이 이슈가 되는 이유
-## 1.2. Race_Condition
+## 1.2. Race_Condition(경쟁 상태)
 동시에 접근해서 생기는 문제들
 - 여러 프로세스들이 동시에 공유 데이터를 접근하는 상황
 - 데이터의 최종 연산 결과가 마지막에 그 데이터를 다룬 프로세스에 따라 달라진다.
@@ -27,7 +27,6 @@ Process_Synchronization1
 - race condition 발생 가능 경우들
     - 시스템콜로 커널의 코드가 실행 중(커널의 데이터 접근, 변수 변경)인 상황에서 cpu를 뺏겨서 또 다른 프로세스한테 cpu가 넘어갔는데 또 시스템콜을 해서 커널의 코드가 또 실행 
     - 커널의 코드 실행중에 인터럽트가 들어옴. 인터럽트 처리 코드도 커널의 코드
-
 
 # 2. OS에서의 race condition
 ## 2.1. 커널 수행 중 인터럽트 발생
@@ -60,26 +59,27 @@ Process_Synchronization1
 - race condition을 막기 위해 concurrent process는 동기화가 잘되어야 함
 
 
-# 3.The Critical_Section Problem (임계구역)
+# 3. The Critical_Section Problem (임계구역)
 <img src='./images/critical_section.png' height="600px" width="850px">  
 
 - n개의 프로세스가 공유 데이터를 동시에 사용하기를 원하는 경우
 - 공유 데이터를 접근하는 코드 : critical section
 
 # 4. Critical_Section 해결을 위한 Algorithm (소프트웨어적 해결)
-<img src='./images/critical_section.png' height="600px" width="850px">  
+<img src='./images/critical_solve.png' height="600px" width="850px">  
 
 - 크게 critical section인 코드와 그렇지 않은 코드로 구분 가능하다. (공유 데이터에 접근하거나 그렇지 않거나)
 - critical section에 동시에 여러 프로세스가 들어가지 못하게 하기 위해 entry section에서 lock, exit section에서 unlock과 같이 해결 가능.
 
-### 가정
-- 모든 프로세스의 수행 속도는 0보다 크고, 프로세스들 간의 상대적인 수행속도는 가정하지 않을때.
+## 3가지 조건
 ### Mutual Exclution(상호 배제)
 - 어떤 프로세스가 critical section 부분을 수행 중이면 다른 모든 프로세스들은 각자의 critical section에 들어가면 안 된다.
 ### Progress(진행)
 - 아무도 critical section에 없으면 critical section에 들어가고자하면 통과시켜줘야한다.
 ### Bounded Waiting(유한 대기)
 - 다른 프로세스들끼리 독점하여 생기는 Starvation 방지. 프로세스가 critical section에 들어가려는 요청을 한 후 해당 요청이 허용될 때까지 다른 프로세스들이 critical section에 들어가는 횟수에 한계가 있어야한다.
+### 가정
+- 모든 프로세스의 수행 속도는 0보다 크고, 프로세스들 간의 상대적인 수행속도는 가정하지 않을때.
 
 ## 4.1. 알고리즘 1
 <img src='./images/critical_section_algorithm1.png' height="600px" width="850px">  
