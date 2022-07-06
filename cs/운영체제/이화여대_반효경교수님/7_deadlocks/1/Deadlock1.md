@@ -55,7 +55,7 @@ Deadlock1
 ### Circular Wait
 싸이클을 파괴하면 해결
 - 모든 자원 유형에 할당 순서를 정하기
-- 순서가 3인 자원 R<sub>i</sub>를 보유 중인 프로레스가 순서가 1인 자원 R<sub>j</sub>을 할당받기 위해서는 우선 R<sub>i</sub>를 release
+- 순서가 3인 자원 R<sub>i</sub>를 보유 중인 프로세스가 순서가 1인 자원 R<sub>j</sub>을 할당받기 위해서는 우선 R<sub>i</sub>를 release
 
 ## 2.2. Deadlock Avoidance 
 ![images.png](./images/dl_avoid2.png)

@@ -101,7 +101,7 @@ CPU를 한 프로세스에서 다른 프로세스로 넘겨주는 과정을 말�
 - degree of Multiprogramming(메모리에 프로그램이 몇 개 올라갔는가)을 제어
 - 시분할에는 보통 장기 스케줄러가 없다. 지금의 시스템은 (무조건 Ready) 시작하면 바로 메모리를 준다. 그렇다면 메모리가 너무 많으면 어떻게 할까? -> 중기 스케줄러
 ### 3.2.2. Short-term scheduler(단기 스케줄러 or CPU scheduler)
-- 어떤 프로세스를 다음번에 running 시킬지 경절
+- 어떤 프로세스를 다음번에 running 시킬지 결정
 - 프로세스에 CPU를 주는 문제
 - 충분히 빨라야 함(millisecond단위)
 ### 3.2.3. Medium-term scheduler(중기 스케줄러 or Swapper)
