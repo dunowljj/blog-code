@@ -147,6 +147,4 @@ Memory_Management1
 - 주소공간을 같은 크기가 아닌 의미있는 단위로 자르는 것.
 - 주소공간이 code, data, stack 으로 크게 나뉘는데, 해당 방식과 같이 자름. 더 잘게 자를 수도 있다. 함수단위 등. 대신 세그먼트별로 주소변환해야
 ### 4.2.3. Paged Segmentation
-
-
-![images.png](./images/.png)
+- 합친 것
