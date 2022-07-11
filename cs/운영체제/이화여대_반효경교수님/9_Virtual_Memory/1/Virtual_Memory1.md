@@ -26,7 +26,7 @@ ex) 1번 페이지 접근하려고 봤더니 invalid? -> 해당 페이지를 디
 - invalid page 접근 시 MMU가 trap을 발생시킴(page fault trap)
 - Kernel mode로 들어가서 page fault handler가 invoke됨
 ### 1.3.4. page fault 처리 순서
-1. Invalid reference인지? (사용하지 않늕 주소, 권한 위반) -> 강제 abort
+1. Invalid reference인지? (사용하지 않는 주소, 권한 위반) -> 강제 abort
 2. 그렇지 않다면 빈 페이지 프레임을 획득 (빈 페이지 없으면 뺏어온다 : replace)
 3. 해당 페이지를 disk에서 memory로 읽어온다. (대단히 느린 작업 메모리보다 디스크가 수십만배~백만배 느림)  
     1. disk I/O 끝나기까지 이 프로세스는 CPU를 선점당함(해당 프로세스 block, 당장 사용할 ready상태의 프로세스에게 cpu넘김. 그 전에 컨트롤러에 디스크 읽으라 부탁)
