@@ -13,14 +13,14 @@ Virtual Memory 2
     - Web caching : 읽어온 웹 페이지를 저장했다가 보여주기.
 등 다양한 분야에서 사용
 ## 1.2. 캐쉬 운영의 시간 제약
-- replacemnt 알고리즘 : 삭제할 항목을 결정하는 일에 지나치게 많은 시간이 걸리는 경우 실세 시스템에서 ㅏㅅ용할 수 없음
+- replacemnt 알고리즘 : 삭제할 항목을 결정하는 일에 지나치게 많은 시간이 걸리는 경우 실세 시스템에서 사용할 수 없음
 - Buffer caching이나 Web caching의 경우(=대부분의 경우)
     - O(1) 에서 O(log n) 정도까지 허용
 - Paging system인 경우
     - page fault인 경우에만 OS가 관여함
     - 페이지가 이미 메모리에 존재하는 경우 참조시각 등의 정보를 OS가 알 수 없음
     - O(1)인 LRU의 list조작조차 불가능
-## 1.3. LRU,, LFU 알고리즘의 구현의 경우
+## 1.3. LRU, LFU 알고리즘의 구현의 경우
 ### LRU 구현
 - 세로로 뻗은 LinkedList 생각, 제일 위에가 오래전에 참조된 페이지.
 - 제일 위에 있는 페이지 쫓아내면 됨.
@@ -92,4 +92,69 @@ Virtual Memory 2
 # 4. Thrashing
  - 어떤 프로그램의 어느정도의 최소 메모리가 할당조차안되면, page fault가 자주 일어난다.
  - 최소한의 page frame 할당이 안돼서 page fault가 지나치게 많이 일어나는 경우
- 3644
+ ## 4.1. 언제 일어날까?
+![images.png](./images/glo_loc.png)
+ - 메모리에 동시에 올라간 프로그램이 늘어남에 따른 cpu의 이용률
+    - 메모리에 프로그램이 하나만 올라갔을때는, cpu utiliazation이 낮다. I/O하러가면 cpu가 놀기도 한다.
+    - 메모리에 두 개가 올라가면, I/O가도 다른 프로그램이 쓴다. 이용률 증가
+    - 개수가 올라갈수록, 점점 올라간다.
+    - 어느순간 이용률 뚝 떨어짐 왜? thrashing 발생해서.
+    - 멀티프로그래밍 degree가 너무 올라가면서, 각 프로그램이 가진 메모리 용량이 대단히 작아지고, page fault가 빈번히 발생. 
+    - 어떤 프로그램이 cpu를 잡더라도 page fault가 일어나기때문에, cpu 이용률이 낮아진다.
+## 4.2. 과정
+1. 최소한의 페이지 프레임 할당받지 못함
+2. page fault rate 매우 높아짐 
+3. cpu utilization이 낮아짐 
+4. OS는 MPD(Multiprogramming degree)를 높여야 한다고 판단 
+5. 또 다른 프로세스가 시스템에 추가(higher MPD)
+6. 프로세스 당 할당 frame 수가 더욱 감소 
+7. 프로세스는 page의 swap in/ swap out으로 매우 바쁨 ,대부분의 시간에 cpu는 한가함
+- low throughput
+### 막기 위해서는?
+- Multiprogramming degree 조절(어느정도 메모리 확보 할 수 있도록)
+
+# 5. Thrashing 해결책들 (global replacement)
+## 5.1. Working-Set Model
+### Locality of reference
+- 프로세스는 특정 시간 동안 일정 장소만을 집중적으로 참조하는 것
+- 특정 시간 집중적으로 참조되는 해당 page들의 집합을 locality set이라 함 Working-Set 알고리즘에서는 working set이라고 함
+### Working-set Model
+- Locality에 기반하여 프로세스가 일정 시간 동안 원활하게 수행되기 위해 한꺼번에 메모리에 올라와 있어야 하는 page 들의 집합을 Working Set이라 정의함
+- Working Set 모델에서는 process의 working set의 전체가 메모리에 올라와 있어야 수행되고 그렇지 않을 경우 모든 frame을 반납한 후 swap out(suspend)
+    - multiprogramming degree가 너무 높아서 working set 보장 불가 시 전체 반납해버림
+- Thrashing 방지
+- Multiprogramming degree를 결정
+## 5.2. Working-Set Algorithm
+- working set은 미리 알 수가 없다. (정확히 모름) 그래서 과거를 통해 추정한다.
+![images.png](./images/ws_al.png)
+### working set의 결정
+- working set window를 통해 알아냄
+- 창을 뚫는다. working set은 델타시간만큼의 Time interval사이에 참조된 서로 다른 페이지들의 집합이다. 위 그림의 경우 왼쪽하단을 보면 window크기 만큼의 참조된 페이지들의 중복을 제거한 것이 working set이다.
+- 해당 프로그램에게 5개 페이지 프레임을 줄 수 있으면 1,2,5,6,7을 올리고, 다 못주면 swap out
+- working set의 크기가 바뀔 수 있다.
+- working set에 속한 page는 메모리에 유지, 속하지 않은 것은 버림. 즉, 참조된 후 델타시간 동안 해당 page를 메모리에 유지하고 버린다.
+
++ Process들의 워킹 셋 사이즈 합이 페이지 프레임 수보다 큰 경우
++ 일부 process를 swap out 시켜 남은 process의 working set을 우선적으로 충족 (MPD를 줄임)
+- working set을 다 할당하고도 page frame이 남는 경우 swap out 되었던 프로세스에게 working set을 할당(MPD를 키움)
+
+## 5.3. PFF(Page-Fault Frequency) Scheme
+![images.png](./images/pff_schem.png)
+- 페이지 폴트를 얼마나 내는지 본다.
+- 페이지 폴트를 많이 일으키면 더 준다. rate의 상한과 하한을 두고 일정 수준의 페이지 폴트를 유지하게 한다.
+- (빈 프레임)페이지 폴트가 빈번한데 더 줄 메모리가 없으면, 그냥 해당 프로그램을 통째로 swap out 시켜서 남아있는 프로그램이라도 잘 유지하는 방향
+
+## 5.4. Page Size의 결정
+- Page size를 감소시키면
+    - 페이지 수 증가
+    - 페이지 테이블 크기 증가 (엔트리 수가 많아짐)
+        
+    - Internal fragmentation 감소
+        - 잘게 자르기때문에, 내부 조각 감소
+    - Disk transfer의 효율성 감소
+        - Seek/rotation vs. transfer
+        - 디스크는 seek 시간이 오래 걸리기때문에, 가능한 많은 양을 올리는게 좋다.
+    - 필요한 정보만 메모리에 올라와 메모리 이용이 효율적
+        - Locality의 활용 측면에서는 좋지 않음.
+- Trend
+    - 메모리 크기도 점점 커지는데, 페이지 사이즈가 너무 작으면, 페이지 테이블도 너무 커진다. 최근에는 큰 크기의 페이지를 사용하는 메모리 시스템 이야기도 나온다.
