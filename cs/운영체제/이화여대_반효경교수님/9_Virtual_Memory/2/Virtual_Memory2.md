@@ -148,7 +148,7 @@ Virtual Memory 2
 - Page size를 감소시키면
     - 페이지 수 증가
     - 페이지 테이블 크기 증가 (엔트리 수가 많아짐)
-        
+  
     - Internal fragmentation 감소
         - 잘게 자르기때문에, 내부 조각 감소
     - Disk transfer의 효율성 감소
