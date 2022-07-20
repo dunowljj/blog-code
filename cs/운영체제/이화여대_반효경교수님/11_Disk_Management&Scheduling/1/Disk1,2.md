@@ -36,7 +36,7 @@ Disk Management & Scheduling 1, 2
 4. OS를 디스크에서 load하여 실행 
 
 # 3. 디스크 접근 시간
-## 2.1. Acess time의 구성
+## 2.1. Access time의 구성
 ### Seek time
 - 헤드를 해당 실린더로 움직이는데 걸리는 시간
     - 안쪽 -> 바깥쪽 , 바깥쪽 -> 안쪽
@@ -79,7 +79,7 @@ Disk Management & Scheduling 1, 2
 ![images.png](./images/cscan.png) 
 - Circular SCAN
 - 헤드가 한쪽 끝에서 다른쪽 끝으로 이동하며 가는 길목에 있는 모든 요청을 처리
-- 다른쪽 끝에 도달했으면 요청을 처리하지 않고 곧바로 출발점을 ㅗ닷 ㅣ이동
+- 다른쪽 끝에 도달했으면 요청을 처리하지 않고 곧바로 출발점으로 다시 이동
 - 이동 거리는 길어질 수 있으나, SCAN보다 균일한 대기 시간을 제공한다. 
 ## 3.5. N-SCAN
 - SCAN의 변형
