@@ -4,6 +4,9 @@ Introduction to Operation System
 # 1. 운영체제란?
 <img src="/Users/jungjoon/git/blog-code/cs/운영체제/이화여대_반효경교수님/1_introduction/1/images/layer.png" height=350px;></img>
 
+![title](./images/layer.png){: width="10%" height="10%"}
+
+
 - 계층의 위치를 잘 보자
 - 각종 소프트웨어를 편하게 사용하도록 하면서, 복잡한 하드웨어를 관리한다.
 
@@ -59,17 +62,17 @@ Introduction to Operation System
 - Hard realtime system (경성 실시간 시스템) : 데드라인 안지키명 치명적
 - Soft realtime system (연성 실시간 시스템) : 데드라인 있지만 심히 치명적이지 않음
 
-## 몇 가지 용어들
+## 3.3. 몇 가지 용어들
 - Multitasking : OS 스케쥴링에 의해 테스크를 번갈아 수행, 독립된 메모리
 - Multiprogramming : 메모리 측면 강조, 프로세서의 자원 낭비 방지. 프로세스 대기 동안 다른 프로그램 실행
 - Time sharing : cpu 강조
 - Multiprocess : fork를 통해 여러 개의 프로그램들을 병렬로 처리, 여러 개의 프로세서가 작업을 병렬처리
 + MultiProcessor : 위에 용어들은 하나의 cpu에서 나누는 것을 의미하는 비슷한 용어이지만, 이 용어는 cpu가 여러 개임을 말하는 하드웨어적인 개념이다.
 
-# 운영체제의 예
-## 유닉스(UNIX)
+# 4. 운영체제의 예
+## 4.1. 유닉스(UNIX)
 초창기 유닉스는 대형 컴퓨터를 위한 운영체제이다. 개인용으로 출발한 MS와는 그 방향성이 달랐다.
-### 특징:
+### 4.1.2. 특징:
 - 대부분의 코드가 C언어로 작성
     - 유닉스를 만들기 위해 C언어 만듦
     - C언어는 기계어와 가깝다. 하드웨어를 직접 다루기 좋다.
@@ -78,19 +81,19 @@ Introduction to Operation System
     - 커널이 크면 운영체제가 메모리를 많이 차지함
 - 다양한 버전
     - System V, FreeBSD, SunOS, Solaris, Linux
-### Linux
+### 4.1.3 Linux
 - 원래 유닉스 목적과 다르게 개인용으로도 사용.
 - 개인용, 스마트폰, 임베디드 시스템 등 광범위한 사용
 
-## DOS(Disk Operating System)
+## 4.2. DOS(Disk Operating System)
 - MS사에서 1981년 IBM-PC를 위해 개발
 - 단일 사용자 대상
 - 처음에 앞으로의 제품들의 메모리가 640kb가 넘지 않을거라 예상하고, 이만큼 지원하도록 만들었으나, 하드웨어의 급속한 발전으로 기능에 기능을 덧붙이면서 누더기가 되었다. 시간이 지나 도스 위에서 윈도우즈를 실행했고, 후에는 윈도우즈가 독자적으로 사용되었다.
-## MS Windows
+## 4.3. MS Windows
 - MS사의 다중 작업용 GUI 기반 운영 체제
 - Plug and Play, 네트워크 환경 강화
 - Dos용 응용 프로그램과 호환성 제공
-## Handheld device를 위한 OS
+## 4.4. Handheld device를 위한 OS
 - 지금은 좀 때가 지남(2014년)
 ***
 
