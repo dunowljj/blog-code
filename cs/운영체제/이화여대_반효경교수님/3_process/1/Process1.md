@@ -5,7 +5,8 @@ Process 1
 프로세스는 한 마디로 실행중인 프로그램을 말한다.
 
 ## 1.1. 프로세스의 문맥(Context)
-<img src="./images/process1.png" height="450px" width="400px"/>  
+<!-- <img src="./images/process1.png"/>   -->
+![문맥](./images/process1.png)
 
 프로세스의 문맥은 특정 시점을 놓고 봤을 때, 현재 프로세스의 상태를 나타내는데 필요한 모든 요소들을 말한다.  
 PC가 어디를 가르키는지, 프로세스 메모리에 무엇을 담고 있는지(code 실행하다가 stack에 뭐를 얼마나 쌓았나?), data에 실행하면서 바꾸곤 하던 변수값이 지금은 얼마인지, 레지스터에 어떤 값 넣고 어떤 인스트럭션까지 실행 했는지 등 다양한 정보를 저장한다.
@@ -46,12 +47,13 @@ PC가 어디를 가르키는지, 프로세스 메모리에 무엇을 담고 있�
 - 프로세스는 통째로 디스크에 swap out 된다.
 - 중기한테 뺏긴 경우 말고도, 사용자가 직접 프로그램을 중지시키는 break key의 경우도 있다.
 
-**New**(프로세스 생성 중), **Terminated**(수행이 끝나고 작업 정리하는 중)  
+**New**(프로세스 생성 중인 생태), **Terminated**(프로세스 자체는 수행이 끝나고 정리하는 작업 중)  
 
 ❗️Blocked는 자신이 요청한 event가 만족되면 Ready가 되지만, Suspended는 외부에서 resume 해줘야 Active가 된다.
 
 ## 2.2. PCB(Process Control Block)
-<img src="./images/pcb1.png" height="450px" width="400px"/>  
+<!-- <img src="./images/pcb1.png" height="450px" width="400px"/>   -->
+![문맥](./images/pcb1.png)
 
 ### 2.2.1. PCB란?
 운영체제가 각 프로세스를 관리하기 위해 **프로세스마다** 유지하는 정보이다. 구조체로 유지하며 여러 구성 요소를 가진다.  
@@ -69,7 +71,8 @@ PC가 어디를 가르키는지, 프로세스 메모리에 무엇을 담고 있�
 
 
 ## 2.2. 문맥 교환(Context Switch)
-<img src="./images/contextswitching1.png" height="450px" width="800px"/>  
+<!-- <img src="./images/contextswitching1.png" height="450px" width="800px"/>   -->
+![문맥 교환](./images/contextswitching1.png)
 
 CPU를 한 프로세스에서 다른 프로세스로 넘겨주는 과정을 말한다. CPU가 다른 프로세스에게 넘어갈 때, CPU를 내어주는 프로세스의 상태를 해당 프로세스의 PCB에 저장한다. 그리고 새롭게 얻는 프로세스의 상태를 대상 프로세스의 PCB에서 읽어온다.
   

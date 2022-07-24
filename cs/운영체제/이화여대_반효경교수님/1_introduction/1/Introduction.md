@@ -2,10 +2,9 @@ Introduction to Operation System
 ====
 이화여자대학교 반효경 교수님의 운영체제 강의를 요약한 내용입니다. 틀린 부분이 있다면 지적해주시면 감사하겠습니다.  [강의 링크](http://www.kocw.net/home/cview.do?cid=4b9cd4c7178db077)
 # 1. 운영체제란?
-<img src="/Users/jungjoon/git/blog-code/cs/운영체제/이화여대_반효경교수님/1_introduction/1/images/layer.png" height=350px;></img>
+<!-- <img src="/Users/jungjoon/git/blog-code/cs/운영체제/이화여대_반효경교수님/1_introduction/1/images/layer.png" height=350px;></img> -->
 
-![title](./images/layer.png){: width="10%" height="10%"}
-
+![title](./images/layer.png)
 
 - 계층의 위치를 잘 보자
 - 각종 소프트웨어를 편하게 사용하도록 하면서, 복잡한 하드웨어를 관리한다.
