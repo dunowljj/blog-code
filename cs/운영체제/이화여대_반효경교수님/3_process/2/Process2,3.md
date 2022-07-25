@@ -7,7 +7,7 @@ Process 2,3
 
 # 1. Thread
 ## 1.1. Thread란?
-<img src="./images/thread1.png" height="450px" width="800px"/>  
+![스레드 공간](./images/thread1.png)
 
 - 경량화된 프로세스(lightweight process)라고도 한다.
 - 프로세스 내부에 CPU 실행 단위가 여러 개인 경우
@@ -25,7 +25,7 @@ Process 2,3
 - data section
 - OS resources
 
-<img src="./images/thread2.png" height="450px" width="800px"/>  
+![스레드 정보 구성](./images/thread2.png)
 
 결국에는 cpu 수행과 관련된 정보만 각 스레드마다 별도로 가지게 된다.
 
