@@ -5,14 +5,14 @@ Process Management 2
 # 1. 프로세스 관련한 시스템 콜
 유닉스의 경우 fork() -> exec() 를 통해 자식 프로세스를 생성한다. 사용자 프로세스가 직접 못하고, 운영체제를 통해서만(시스템콜) 복제할 수 있다.
 ## 1.1. fork()
-![fork()](./images/fork.png)
+![fork](./images/fork.png)
 - 새거 만듦
 - fork()를 하면 해당 코드의 처음부터 실행되는 것이 아닌, **fork()한 바로 다음 시점부터 실행**된다. 부모의 fork 시점의 context를 복제했기 때문이다.
 - 복제된 프로세스와 원본을 착각하지 않기 위해 장치가 마련되어 있다.
 - 위 이미지를 보면, fork()함수의 return value(pid)로 부모 프로세스와 자식 프로세스를 구분한다.(원본 구분) -> 부모, 자식 프로세스가 다른 로직을 실행하도록 하는 모습을 볼 수 있다.
 ## 1.2. exec()
-![exec()](./images/exec1.png)
-![exec()](./images/exec.png)
+![exec](./images/exec1.png)
+![exec](./images/exec.png)
 
 - 새걸로 덮어씌움
 - exec()는 어떤 프로그램을 완전히 새로운 프로세스로 태어나게 해준다. 
@@ -21,7 +21,7 @@ Process Management 2
     - 예시로 위에서 두번째 그림에 exec이 실행되면, Hello, I am parent가 출력되지 못한다. 
 ## 1.3. wait()
 <!-- <img src="./images/wait1.png" height="400px" width="700px"/>   -->
-![wait()](./images/wait1.png)
+![wait](./images/wait1.png)
 
 - 자식 프로세스의 종료까지 잠듦
 - 위의 이미지에도 자식 프로세스인 경우(childPID == 0)에는 자식 프로세스를 위한 코드를 실행하고, 부모일 경우 wait()시킨다.
@@ -38,7 +38,7 @@ Process Management 2
     - 부모 프로세스 종료 전 자식들이 먼저 종료됨.
 
 ## 1.4. exit()
-- 프로세스 종료 및 모든 자원 반납하고 부모한테 죽는다고 알림
+- 프로세스 종료 및 모든 자원을 반납하고 부모한테 죽는다고 알린다.
 
 # 2. 프로세스간 협력
 ## 2.1. 독립적 프로세스
