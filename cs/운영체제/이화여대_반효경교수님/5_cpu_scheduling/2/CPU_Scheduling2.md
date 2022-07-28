@@ -29,6 +29,7 @@ CPU_Scheduling2
 <!-- <img src='./images/multilevel_feedback.png' height="600px" width="850px"> -->
 ![multi3](./images/multilevel_feedback.png)
 
+
 - 우선순위가 변할 수 있는 구조
 ###
 - 보통 RR을 사용하며 처음 들어오는 프로세스 우선순위 가장 높은 큐에 넣고, 내려갈수록 할당 시간을 길게 주고, 제일 아래는 FCFS 사용한다. 맨 위에 큐 비면 다음 큐 작업하는 방식
@@ -38,8 +39,10 @@ CPU_Scheduling2
 
 
 # 3. Multiple-Processor Scheduling
+
 <!-- <img src='./images/multiple_processor.png' height="600px" width="850px"> -->
 ![multi4](./images/multiple_processor.png)
+
 
 ## 3.1. Homogeneous processor
 - CPU가 여러 개여도 Queue에 한 줄로 세워서 알아서 꺼내가게 할 수 있다.
@@ -62,6 +65,7 @@ CPU_Scheduling2
 - 일반 프로세스에 비해 높은 priority를 갖도록 해야한다.
 
 # 5. Thread Scheduling
+
 ## 5.1. Local Scheduling
 - 사용자 프로세스가 직접 쓰레드를 관리하고 운영체제는 그 쓰레드 존재를 모른다.
 - 운영체제는 모르기때문에 해당 프로세스에게 cpu를 줄지 말지만 선택한다.
@@ -78,6 +82,7 @@ CPU_Scheduling2
 ## 6.1. Queueing models
 - 최근에는 시스템에서 직접 돌리는 방식을 선호하기때문에 사용 빈도가 떨어져가는 듯 하다. 이론적으로 쓰기도 한다.
 ## 6.2. Implementation(구현) & Measurement(성능 측정)
+
 - 실제 시스템에 구현해서 작업을 시켜서 성능 측정. 실측
 ## 6.3.  Simulation(모의 실험))
 - 구현보다 훨씬 간단하다.
