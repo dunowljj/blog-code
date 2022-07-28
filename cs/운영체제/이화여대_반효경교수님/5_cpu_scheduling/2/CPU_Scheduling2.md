@@ -16,14 +16,14 @@ CPU_Scheduling2
 
 <img src='./images/multilevel2.png' height="600px" width="850px">
 
-- 레디큐를 여러개로 분할한다. -> interactive한 foreground와 interactive하지 않은 일괄처리를 하는 background
+- 레디큐를 여러 개로 분할한다. -> interactive한 foreground와 interactive하지 않은 일괄처리를 하는 background
 -  각 특성에 맞게 독립적인 스케줄링 알고리즘을 가지게 한다.
 - 먼저 어느 줄에 cpu를 줄지 결정하고, 해당 줄에서 어느 프로세스에 작업을 줄 것인지 결정한다.
 + 큐에 대한 스케줄링
     + 우선순위를 강하게 적용하는 경우, 우선순위 높은 줄이 비어있는 경우에만 낮은 순위를 처리하게 할 수 있다. 하지만 기아현상의 가능성이 있다.
     + Time slice : 각 큐에 CPU time을 적절한 비율로 할당. 예를 들어 높은 큐에 80% 낮은 큐에 20%로 시간할당하기.
 
-# 1.2. Multilevel Feedback Queue
+# 2. Multilevel Feedback Queue
 <img src='./images/multilevel_feedback.png' height="600px" width="850px">
 
 - 우선순위가 변할 수 있는 구조
@@ -34,7 +34,7 @@ CPU_Scheduling2
     - 예측이 필요없음.
 
 
-# 3.5. Multiple-Processor Scheduling
+# 3. Multiple-Processor Scheduling
 <img src='./images/multiple_processor.png' height="600px" width="850px">
 
 ### Homogeneous processor
@@ -48,7 +48,7 @@ CPU_Scheduling2
 ### Asymmetric multiprocessing
 - 하나의 프로세서가 시스템 데이터의 접근과 고유를 책임지고 나머지 프로세서는 거기에 따름
 
-# 3.6. Real-Time Scheduling
+# 4. Real-Time Scheduling
 - real-time 실시간 : (데드라인안에 끝내기 보장)
 - 보통 미리 스케줄링해서 데드라인 보장
 - 주기적으로 활성화해야하는 경우 ex) 10초에 한번씩 잡아서 1초동안은 cpu를 써야한다.
@@ -57,7 +57,7 @@ CPU_Scheduling2
 ### Soft real-time computing
 - 일반 프로세스에 비해 높은 priority를 갖도록 해야함
 
-# 3.7. Thread Scheduling
+# 5. Thread Scheduling
 ### Local Scheduling
 - 사용자 프로세스가 직접 쓰레드를 관리하고 운영체제는 그 쓰레드 존재를 모름
 - 운영체제는 모르기때문에 해당 프로세스에게 cpu를 줄지 말지만 선택
@@ -66,13 +66,13 @@ CPU_Scheduling2
 - 운영체제가 쓰레드의 존재를 이미 알고 있음
 - 운영체제가 어떤 쓰레드 스케줄 할지 결정
 
-# 4. Algorithm Evaluation(평가)
+# 6. Algorithm Evaluation(평가)
 그림에서 server는 cpu로 생각하면 된다.
 <img src='./images/algorithm_evaluation.png' height="600px" width="850px">
 
 ### Queueing models
-- 최근에는 시스템에서 직접돌리는 방식을 선호하기때문에 사용 빈도가 떨어져가는 듯. 이론적으로 쓰기도
-### Implementation(구현) & Measurement
+- 최근에는 시스템에서 직접 돌리는 방식을 선호하기때문에 사용 빈도가 떨어져가는 듯 하다. 이론적으로 쓰기도 한다.
+### Implementation(구현) & Measurement(성능 측정)
 - 실제 시스템에 구현해서 작업을 시켜서 성능 측정. 실측
 ### Simulation(모의 실험))
 - 구현보다 훨씬 간단함
