@@ -10,7 +10,8 @@ Process_Synchronization2
 - 추상 자료형의 일종. 프로그래머가 편리해짐.
 ## 1.1. busy waiting 이용한 구현 방식
 
-<img src='./images/semaphores.png' height="600px" width="850px">  
+<!-- <img src='./images/semaphores.png' height="600px" width="850px">   -->
+![semaphores](./images/semaphores.png)
 
 - lock/unlock 을 semaphore을 통해 가능
 - 공유자원을 획득하고 반납하는 것을 처리해줌
@@ -28,8 +29,9 @@ Process_Synchronization2
     - V 연산은 다 사용하고 내어놓는것. 자원이 4개인데 V 연산 시 5개가 됨.
 - lock/unlock -> Semaphore 1 일때를 생각 -> P하면 lock, V하면 unlock
 
-### Semaphores, Critical Section
-<img src='./images/semaphore_critical.png' height="600px" width="850px">  
+### 구현
+<!-- <img src='./images/semaphore_critical.png' height="600px" width="850px">   -->
+![semaphore_critical](./images/semaphore_critical.png)
 
 - mutex(mutual exclution)변수를 1로 두고, c_s 들어갈때 P, c_s 나갈 때 V 연산
 - Semaphore가 지원되면 P, V연산만 해주면 됨. 어떻게 P, V를 구현할지는 해당 시스템에서 생각하는 것. 추상 자료 형태로 제공되는 것.
@@ -37,7 +39,8 @@ Process_Synchronization2
 - 구현을 busy-wait(=spin lock) 말고 Block & Wakeup(=sleep lock)형태로도 구현 가능 -> ready queue의 block 생각해보기
 
 ## 1.2. Block & Wakeup 이용한 구현 방식
-<img src='./images/semaphore_blockwake.png' height="600px" width="850px"> 
+<!-- <img src='./images/semaphore_blockwake.png' height="600px" width="850px">  -->
+![semaphore_blockwake](./images/semaphore_blockwake.png)
 
 ### 정의
 - value는 semaphore 정수값, L은 잠든 프로세스를 연결하기위한 큐
@@ -45,7 +48,8 @@ Process_Synchronization2
 - 획득을 못한 프로세스들은 PCB를 semaphore 변수 큐에 매달아 놓는다.
 
 ### 구현
-<img src='./images/semaphore_bw_impl.png' height="600px" width="850px">  
+<!-- <img src='./images/semaphore_bw_impl.png' height="600px" width="850px">   -->
+![semaphore_bw_impl](./images/semaphore_bw_impl.png)
 
 - 마찬가지로 P는 자원 획득, V는 다 쓰고 반납
 - P : 자원 여분 없으면 blocked, 있으면 획득
@@ -56,8 +60,8 @@ Process_Synchronization2
 
 ## 1.3. Busy Waiting vs Block & Wakeup
 - 일반적으로 Busy-wait < Block/Wakeup 더 효과적
-- Block/Wakeup 오버헤드가 들긴 함
-    - Critical section의 길이가 긴 경우 Block/Wakeup이 적당, 매우 짧으면 busy-wait도 쓸만함. 오버헤드가 더 커질수 있어서
+- Block/Wakeup 오버헤드가 들긴 한다.
+    - Critical section의 길이가 긴 경우 Block/Wakeup이 적당하지만, 매우 짧으면 오버헤드가 더 커질수 있기 때문에 busy-wait도 쓸만하다. 
 
 ## 1.4. 두 종류 Semaphores
 ### Counting semaphore
@@ -69,7 +73,8 @@ Process_Synchronization2
 - 주로 mutual exclusion
 
 ## 1.5. Deadlock and Starvation
-<img src='./images/semaphore_deadstarv.png' height="600px" width="850px">  
+<!-- <img src='./images/semaphore_deadstarv.png' height="600px" width="850px">   -->
+![semaphore_deadstarv](./images/semaphore_deadstarv.png)
 
 ### deadlock
 - 작업을 위해 두 가지 자원 S와Q를 모두 얻어야 한다고 가정해보자. P0가 cpu를 먼저 얻어서 S를 얻은 다음에 cpu를 빼앗겨서 P1이 Q를 획득한 경우 P0이 S를 가지고 있기때문에 영원히 조건을 충족 못하여 얻지 못한다. -> 데드락
@@ -79,9 +84,10 @@ Process_Synchronization2
 - indefinite blocking. 특정한 프로세스가 자원을 얻지 못하고 영원히 기다림. 특정 프로세스들만 자원을 공유하면서 다른 프로세스들은 영원히 자기 차례가 오지 않음
 
 ### 식사하는 철학자
-<img src='./images/dining_philo.png' height="600px" width="850px">  
+<!-- <img src='./images/dining_philo.png' height="600px" width="850px">   -->
+![dining_philo](./images/dining_philo.png)
 
-- 젓가락 두개가 식사에 필요
-- 옆에서 계속 먹으면 한 명을 굶길 수 있음 -> Starvation
+- 젓가락이 인원 당 한 개씩만 놓여있다. 식사하려면 양쪽에 젓가락을 모두 사용해야 한다. 여러 사람이 같은 젓가락을 동시에 사용할 수 없다.
+- 양 옆에서 계속 먹으면 한 명을 굶길 수 있음 -> Starvation
 - 모두 동시에 왼손에 젓가락을 들고 오른손에 젓가락을 쥐려할때 -> Deadlock
 - [위키피디아 철학자의 만찬](https://ko.wikipedia.org/wiki/%EC%8B%9D%EC%82%AC%ED%95%98%EB%8A%94_%EC%B2%A0%ED%95%99%EC%9E%90%EB%93%A4_%EB%AC%B8%EC%A0%9C)
