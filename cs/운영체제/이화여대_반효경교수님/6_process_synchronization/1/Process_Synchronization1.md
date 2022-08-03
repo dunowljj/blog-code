@@ -139,4 +139,4 @@ user mode - kernel mode 반복해서 수행하는 그림이다. 시스템콜을 
 
 
 인스트럭션 실행 도중에 cpu가 뺏기진 않기 때문에, 인스트럭션 하나로 데이터를 읽고 쓰는 작업을 동시에 실행할 수 있다면, lock 문제를 간단하게 해결할 수 있다.  
-위의 예시 Test_and_set(a) : 두 가지 작업(1,2)을 atomic하게 수행한다. 코드부분을 보면 while(Test_and_Set(lock));쳐렴 갼댠하게 해결한다.
+위의 예시 Test_and_set(a) : 두 가지 작업(1,2)을 atomic하게 수행한다. 코드부분을 보면 while(Test_and_Set(lock)); 와 같이 갼댠하게 해결한다.

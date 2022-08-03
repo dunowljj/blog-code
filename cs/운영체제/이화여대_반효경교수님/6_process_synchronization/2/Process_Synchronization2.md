@@ -6,22 +6,24 @@ Process_Synchronization2
 - [위키피디아 세마포어](https://ko.wikipedia.org/wiki/%EC%84%B8%EB%A7%88%ED%8F%AC%EC%96%B4)
 - 두 개의 원자적 함수로 조작되는 정수 변수
 - 공유 자원에 대한 접근을 제한하는 방법으로 사용
-- 모든 교착 해결하진 않음.
+- 모든 교착을 해결하진 않음.
 - 추상 자료형의 일종. 프로그래머가 편리해짐.
 ## 1.1. busy waiting 이용한 구현 방식
 
-<!-- <img src='./images/semaphores.png' height="600px" width="850px">   -->
-![semaphores](./images/semaphores.png)
+<img src='./images/semaphores.png' height="600px" width="850px">  
+<!-- ![semaphores](./images/semaphores.png) -->
 
 - lock/unlock 을 semaphore을 통해 가능
 - 공유자원을 획득하고 반납하는 것을 처리해줌
 - 아래 두 가지 연산은 atomic해야함.
 
 - P 연산
+    - S 1감소
     - 공유데이터를 획득하는 과정
     - S값이 0이하면 while문을 돌다가 자원 생기면 가져감
     - 마찬가지로 busy waiting 생김
 - V 연산
+    - S 1증가
     - 다 사용하고 반납하는 과정
 
 - Semaphore S 
@@ -30,17 +32,17 @@ Process_Synchronization2
 - lock/unlock -> Semaphore 1 일때를 생각 -> P하면 lock, V하면 unlock
 
 ### 구현
-<!-- <img src='./images/semaphore_critical.png' height="600px" width="850px">   -->
-![semaphore_critical](./images/semaphore_critical.png)
+<img src='./images/semaphore_critical.png' height="600px" width="850px">  
+<!-- ![semaphore_critical](./images/semaphore_critical.png) -->
 
-- mutex(mutual exclution)변수를 1로 두고, c_s 들어갈때 P, c_s 나갈 때 V 연산
+- mutex(mutual exclution)변수를 1로 두고, critical section 들어갈때 P, 나갈 때 V 연산
 - Semaphore가 지원되면 P, V연산만 해주면 됨. 어떻게 P, V를 구현할지는 해당 시스템에서 생각하는 것. 추상 자료 형태로 제공되는 것.
 
 - 구현을 busy-wait(=spin lock) 말고 Block & Wakeup(=sleep lock)형태로도 구현 가능 -> ready queue의 block 생각해보기
 
 ## 1.2. Block & Wakeup 이용한 구현 방식
-<!-- <img src='./images/semaphore_blockwake.png' height="600px" width="850px">  -->
-![semaphore_blockwake](./images/semaphore_blockwake.png)
+<img src='./images/semaphore_blockwake.png' height="600px" width="850px"> 
+<!-- ![semaphore_blockwake](./images/semaphore_blockwake.png) -->
 
 ### 정의
 - value는 semaphore 정수값, L은 잠든 프로세스를 연결하기위한 큐
@@ -48,8 +50,8 @@ Process_Synchronization2
 - 획득을 못한 프로세스들은 PCB를 semaphore 변수 큐에 매달아 놓는다.
 
 ### 구현
-<!-- <img src='./images/semaphore_bw_impl.png' height="600px" width="850px">   -->
-![semaphore_bw_impl](./images/semaphore_bw_impl.png)
+<img src='./images/semaphore_bw_impl.png' height="600px" width="850px">  
+<!-- ![semaphore_bw_impl](./images/semaphore_bw_impl.png) -->
 
 - 마찬가지로 P는 자원 획득, V는 다 쓰고 반납
 - P : 자원 여분 없으면 blocked, 있으면 획득
@@ -73,8 +75,8 @@ Process_Synchronization2
 - 주로 mutual exclusion
 
 ## 1.5. Deadlock and Starvation
-<!-- <img src='./images/semaphore_deadstarv.png' height="600px" width="850px">   -->
-![semaphore_deadstarv](./images/semaphore_deadstarv.png)
+<img src='./images/semaphore_deadstarv.png' height="600px" width="850px">  
+<!-- ![semaphore_deadstarv](./images/semaphore_deadstarv.png) -->
 
 ### deadlock
 - 작업을 위해 두 가지 자원 S와Q를 모두 얻어야 한다고 가정해보자. P0가 cpu를 먼저 얻어서 S를 얻은 다음에 cpu를 빼앗겨서 P1이 Q를 획득한 경우 P0이 S를 가지고 있기때문에 영원히 조건을 충족 못하여 얻지 못한다. -> 데드락
@@ -84,8 +86,8 @@ Process_Synchronization2
 - indefinite blocking. 특정한 프로세스가 자원을 얻지 못하고 영원히 기다림. 특정 프로세스들만 자원을 공유하면서 다른 프로세스들은 영원히 자기 차례가 오지 않음
 
 ### 식사하는 철학자
-<!-- <img src='./images/dining_philo.png' height="600px" width="850px">   -->
-![dining_philo](./images/dining_philo.png)
+<img src='./images/dining_philo.png' height="600px" width="850px">  
+<!-- ![dining_philo](./images/dining_philo.png) -->
 
 - 젓가락이 인원 당 한 개씩만 놓여있다. 식사하려면 양쪽에 젓가락을 모두 사용해야 한다. 여러 사람이 같은 젓가락을 동시에 사용할 수 없다.
 - 양 옆에서 계속 먹으면 한 명을 굶길 수 있음 -> Starvation
