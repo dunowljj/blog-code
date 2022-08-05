@@ -44,6 +44,7 @@ Memory_Management1
 ![images.png](./images/mmu.png)
 - 주소변환을 해주는 하드웨어 장치
 - 두 개의 레지스터 이용해서 주소 변환(limit register, relocation register)
+
 ![images.png](./images/hardware_sup_at.png)
 - 두 가지 레지스터에 의해 동적 재할당이 이뤄진다. 요청된 프로세스에 대해 relocation register에서 최솟값을 가지고 있다가, 요청한 논리적 주소에 더해서 물리 메모리의 위치를 찾는다.
 - limit register가 없으면, 악의적인 프로그램에서 해당 프로세스의 limit을 넘은 부분까지 침범하여 다른 프로세스에 접근할 가능성이 있다.
@@ -150,4 +151,4 @@ Memory_Management1
 - 주소공간을 같은 크기가 아닌 의미있는 단위로 자르는 것.
 - 주소공간이 code, data, stack 으로 크게 나뉘는데, 해당 방식과 같이 자름. 더 잘게 자를 수도 있다. 함수단위 등. 대신 세그먼트별로 주소변환해야
 ### 5.2.3. Paged Segmentation
-- 합친 것
+- Paging과 Segmentation을 합친 것

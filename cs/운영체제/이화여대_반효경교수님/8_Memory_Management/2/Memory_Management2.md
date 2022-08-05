@@ -18,7 +18,7 @@ Memory_Management2
     - Page-table length register(PTLR)가 테이블 크기를 보관
 - 메모리에 상주하기 때문에 모든 메모리 접근 연산에는 **2번의 memory access** 필요
         - page table 접근 1번, 실제 data/instruction 접근 1번
-- 속도 향상을 위해 associative register 혹은 **translation look-aside buffer(TLB)** 라는 고속의 lookup hardware cache 사용. TLB는 메인메모리와 cpu사이 존재. 주소변화해주는 계층
+- 속도 향상을 위해 associative register 혹은 **translation look-aside buffer(TLB)** 라는 고속의 lookup hardware cache 사용. TLB는 메인메모리와 cpu사이 존재. 주소변환해주는 계층
 ## 1.3. Translation Look-aside Buffer(TLB)
 ![images.png](./images/tlb.png)
 - 속도를 개선하기 위해 TLB라는 별도의 하드웨어를 둔다.
