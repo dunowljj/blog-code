@@ -20,7 +20,7 @@ Memory_Management 4
 - 세그먼트 하나가 여러 개의 페이지 -> 논리 주소 : 세그먼트 번호, offset
     - offset이 세그먼트 길이 이내인 경우에만 주소 변환
     - offset을 다시 잘라서 앞에는 페이지번호, 뒤는 페이지안에서 얼마나 떨어져 있는지에 해당하는 page offset으로 사용한다.
-+ 결국, 1 세그먼트 번호로 세그먼트 테이블에서 세그먼트를 구성하는 page table의 base address를 찾고, 2 찾은 base address와 offset에서 떨어져 나온 페이지번호로 프레임번호를, 3 page offset과 함께 메모리 주소를 변환한다.
++ 결국, 1 세그먼트 번호로 세그먼트 테이블에서 세그먼트를 구성하는 page table의 base address를 찾고, 2 찾은 base address와 offset에서 떨어져 나온 페이지번호로 프레임번호를 찾고, 3 page offset과 함께 메모리 주소를 변환한다.
 
 - 장점 
     - Allocation 문제가 생기지 않는다.
