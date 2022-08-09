@@ -66,24 +66,24 @@ File Systems Implementation 2
     + 실제 파일시스템의 구현에서 디렉토리가 모든 메타데이터를 가지고 있지는 않다. 특히 UNIX의 경우 디렉토리는 일부만 가지고 있고, 별도의 위치(Inode list)에 빼서 가지고 있다.
     + 파일 하나당 Inode가 하나씩 할당 (빨간 작은 네모)
     + UNIX 파일시스템에서 딱 한 가지 파일의 이름은 디렉토리가 가지고 있다. -> 디렉토리에 파일 이름과 Inode 번호를 가지고 있다.
-    + Inode의 크기는 고정되어 있다. -> 위치정보를 나타내는 포인터 개수도 유한하다. -> 굉장히 큰 파일을 어떻게 표현? -> direct ~ triple 이용 : 작은 파일은 direct blocks만으로 표현 가능, 큰 파일은 indirect 사용. indirect를 따라가면 인덱스가 있다. double indirect이면 두 번 따라가야 실제 파일 위치가 있다.
+    + Inode의 크기는 고정되어 있다. -> 위치정보를 나타내는 포인터 개수도 유한하다. -> 굉장히 큰 파일을 어떻게 표현? -> direct blocks ~ triple indirect 이용 : 작은 파일은 direct blocks만으로 표현 가능, 큰 파일은 indirect 사용. indirect를 따라가면 인덱스가 있다. double indirect이면 두 번 따라가야 실제 파일 위치가 있다.
 
 ## 2.2. FAT 파일시스템
+![images.png](./images/fat_fs.png)
 - 마이크로소프트사가 msdos를 만들었을때 처음 만든 시스템
 - 최근에도 윈도우 계열, 모바일기기에도 사용한 경우 있음
 - Boot block
     - 모든 파일시스템 공통적인 부분. 부팅 정보
 - FAT
-    - 파일의 메타데이터의 일부를 보관
-    - 지극히 일부, 위치정보만 보관
-    - Linked Allocation의 문제 두 가지(Reliability , 공간 비효율)를 해결하기 위해 다음 블럭의 위치를 디렉토리에 데이터 블록이 아닌, FAT이라는 별도의 테이블(배열)에 담고 있다.
+    - FAT은 파일의 메타데이터의 일부만 보관한다. 사실상 보관하는 정보는 지극히 일부로 위치정보만 보관한다.
+    - Linked Allocation의 문제 두 가지(Reliability , 공간 비효율)를 해결한다. 다음 블럭의 위치를 디렉토리와 데이터 블록이 아닌, FAT이라는 별도의 테이블(배열)에 담고 있다.
     - FAT이라는 테이블의 배열의 크기는 해당 디스크가 관리하는 data block의 개수만큼이다.
-        - ex. 보기의 해당 파일의 첫 블럭은 217번에 있다. 217번에 가면  해당 내용이 있다. -> 두번째 블럭을 찾으려면 FAT에서 217번 엔트리로 가야한다. -> 해당 엔트리에 618이 있으며, 그 다음 블럭을 찾으려면 FAT의 618번째 엔트리에 가야한다. -> 339를 또 찾아가면 끝났다는 약속된 의미가 적혀있다.
-    - 직접 접근이 가능하다. 217부터 몇번째인지 찾아가면 된다.
-    - 해결 : 
-        - Rerliability 문제 개선 : 배드섹터 발생해도 FAT에 내용이 있다. data block과는 별도로 존재하며, 중효한 정보이기때문에 보통 두 카피 이상 저장
+        - 해당 블럭의 다음 블럭의 위치를 FAT에서 가지고 있다.
+        - ex. 보기의 해당 파일의 첫 블럭은 217번에 있다. 217번에 가면 해당 내용이 있다. -> 두번째 블럭을 찾으려면 FAT을 찾아봐야 한다. FAT의 217번 엔트리로 가야한다. -> 해당 엔트리에 618이 있으며, 그 다음 블럭을 찾으려면 FAT의 618번째 엔트리에 가야한다. -> 339를 또 찾아가면 끝났다는 약속된 의미가 적혀있다.
+    - FAT은 이미 메모리에 올려져있다. 따라서 곧바로 위치 파악이 가능하며, 직접 접근이 가능하다. 217부터 몇번째인지 찾아가면 된다.
+    - 문제 해결 : 
+        - Reliability 문제 개선 : 배드섹터 발생해도 FAT에 내용이 있다. data block과는 별도로 존재하며, FAT은 중요한 정보이기 때문에 보통 두 카피 이상 저장
         - 공간 효율성 : 512bytes 충분히 활용 가능
-
 
 # 3. Free-Space Management
 - 중간에 비어있는 블록의 관리
@@ -105,7 +105,7 @@ File Systems Implementation 2
 - 빈 블록에 빈 블록들의 위치가 저장되어 있다.
 - linked list보다는 빈 블록을 한꺼번에 찾기에 효율적이다.
 - 첫번째 free block이 n개의 pointer를 가짐
-    - n-1 pointer는 free data block을 가리킴
+    - n-1개의 pointer는 free data block을 가리킴
     - 마지막 pointer가 가리키는 block은 또 다시 n pointer
 ## 3.4. Counting
 - 빈 블록의 위치, 해당 위치부터 몇 개가 빈 블록인가? -> (first free block, # of contiguous free blocks)을 유지
@@ -115,11 +115,11 @@ File Systems Implementation 2
 # 4. Directory Implementation
 ## 4.1. 내용을 저장하는 방법
 ![images.png](./images/direct_impl.png)
-### Linear list
+### 4.1.1. Linear list
 - \[파일이름, 나머지 메타데이터] 의 list
 - 메타데이터의 크기는 고정해서 관리
 - linear search 필요 (시간 소요 큼)
-### Hash Table
+### 4.1.2. Hash Table
 - linear list + hashing
 - hash table은 file name을 이 파일의 linear list의 위치로 바꾸어줌
 - 해시함수 적용 시 어떤 인풋값이 주어지더라도, 결과값이 특정 범위안에 숫자로 한정된다.
@@ -136,6 +136,7 @@ File Systems Implementation 2
     - inode, FAT 등
 
 ## 4.3. Long file name의 지원
+- 이미지 참고
 
 # 5. VFS and NFS
 ![images.png](./images/vnfs.png)
@@ -149,16 +150,16 @@ File Systems Implementation 2
 
 # 6. Page Cache and Buffer Cache
 ![images.png](./images/pcach_bcach.png)
-## Page Cache
+## 6.1. Page Cache
 - Virtual memory 의 관점
 - 반쪽짜리 정보
-## Memory-Mapped I/O
+## 6.2. Memory-Mapped I/O
 - 원래는 파일 접근 시 open후 read/write 등 사용
 - 메모리에 매핑하고 read/write등 시스템콜 대신, 메모리에 읽고 쓴다. 실제로는 파일에 데이터를 읽고쓰는 효과가 나도록
-## Buffer Cache
+## 6.3. Buffer Cache
 - 파일 시스템 관점
 - LRU, LFU등 사용 가능
-## Unified Buffer Cache
+## 6.4. Unified Buffer Cache
 - 합쳐서 관리하는 운영체제들 있음.
 - 버퍼 캐시도 페이지단위로 관리한다. 운영체제에서 물리적인 메모리를 관리하는 루틴에 페이지 캐시와 버퍼 캐시를 같이 관리한다.
 
