@@ -102,3 +102,135 @@ class ThreadEx1_2 implements Runnable {
 - main 메서드를 실행하는 쓰레드
 - 프로그램을 실행하면 기본적으로 하나의 쓰레드를 생성하고, main 메서드를 호출해서 작업이 수행되도록 하는 것이다.
 - 실행 중인 사용자 쓰레드가 하나도 없을 때 프로그램은 종료된다.
+
+## 08 싱글쓰레드와 멀티쓰레드
+<p style="text-align:center">
+    <img src="img_1.png"/>
+    <em style="display:block">자바의 정석 요약집 자료 1</em>
+</p>
+
+첫번째는 하나의 쓰레드로 두 개의 작업을 하는 경우이고, 
+두번째는 두개의 쓰레드로 두 개의 작업을 수행하는 경우이다.
+- 두번째의 경우, 얼핏보면 두 가지일을 동시에 처리하는 것처럼 보일 것이다. 사실 빠르게 작업 전환(context switching)이 이루어지고 있는 것이다.
+- context switching에는 PC 정보 등을 저장하고 읽어 오는 시간이 소요된다. 당연히 프로세스의 스위칭이 쓰레드의 문맥 교환보다 더 무겁다. 
+- 오히려 context switching 비용때문에 쓰레드가 2개인 두번째가 더 느릴 수 있다. 싱글 코어에서 단순히 CPU만을 사용하는 계산 작업이라면 오히려 싱글쓰레드가 효율적일 수 있는 것이다.
+
+
+## 09 - 10 싱글쓰레드와 멀티쓰레드 예제
+
+### 예제 코드 및 비교
+```java
+class Ex13_3 {
+    static long startTime = 0;
+
+    public static void main(String args[]) {
+        ThreadEx13_3 th1 = new ThreadEx13_3();
+        th1.start();
+        startTime = System.currentTimeMillis();
+
+        for(int i=0; i < 300; i++) {
+            System.out.print("-");
+        }
+
+        System.out.print("소요시간1 :" + (System.currentTimeMillis() - Ex13_3.startTime));
+    }
+}
+
+class ThreadEx13_3 extends Thread {
+    public void run() {
+        for(int i=0; i < 300; i++) {
+            System.out.print("|");
+        }
+
+        System.out.print("소요시간2 :" + (System.currentTimeMillis() - Ex13_3.startTime));
+    }
+}
+```
+자바의 정석 예시 코드이다. 위의 코드를 실행하면 싱글코어일때와 멀티코어일때 실행 결과가 다르다.
+- 싱글 코어의 경우 차례로 실행되어 쓰레드가 동시에 실행될 수 없다. "---|||---|||"와 같이 일정한 패턴을 보일 수 있다.
+- 멀티 코어의 경우 동시에 실행이 가능하므로 불규칙한 패턴을 보인다.
+
+<p style="text-align:center">
+    <img src="img_2.png"/>
+    <em style="display:block">자바의 정석 요약집 자료 2</em>
+</p>
+
+결국 전체적으로 비교했을때,
+지금의 예제 코드 처럼 단순 출력 로직을 만든다면 속도의 차이가 다음과 같이 나타날 수 있다.
+
+    멀티코어 2개 쓰레드 > 싱글 코어 1개 쓰레드 > 싱글 코어 2개 쓰레드
+
+오히려 싱글코어 1개 쓰레드가 싱글코어 2개 쓰레드보다 빠른 것이다.
+
+
+이미지 속에 3번째 그래프인 `멀티 코어 - 병행` 부분을 살펴보면 겹치는 부분이 존재한다. **화면이라는 자원을 놓고 두 쓰레드가 경쟁**하는 것이다.
+
+### 불확실성에 주의하기
+추가로 위 결과는 실행할 때마다 다른 결과를 얻을 수 있다. 그 이유는,
+- OS의 프로세스 스케줄러의 영향을 받기 때문이다. 
+- JVM의 쓰레드 스케줄러에 의해서 어떤 쓰레드가 얼마나 실행될 것인지 결정되는 것과 같이 프로세스도 프로세스 스케줄러에 의해서 실행순서와 실행시간이 결정된다.
+
+따라서 매 순간 상황에 따라 프로세스에 할당되는 실행시간이 일정하지 않고, 쓰레드에도 마찬가지이다. 
+자바가 OS(플랫폼) 독립적이라고 하지만 실제로는 OS종속적인 부분이 몇 가지 있는데 쓰레드도 그 중 하나이다.
+
+## 11 쓰레드의 I/O 블락킹(blocking)
+두 쓰레드가 **서로 다른 자원을 사용하는 작업**의 경우 싱글쓰레드 프로세스보다 **멀티쓰레드 프로세스가 더 효율적**이다.
+**외부기기의 입출력을 필요로 하는 경우 유용하다.** 예시로 한 쓰레드가 사용자 입력을 기다리느라 멈춰있을때, 다른 작업을 나머지 쓰레드로 진행할 수 있다.
+
+## 12 쓰레드의 I/O 블락킹(blocking) 예제 1
+```java
+class ThreadEx6 {
+	public static void main(String[] args) throws Exception
+	{
+		String input = JOptionPane.showInputDialog("아무 값이나 입력하세요."); 
+		System.out.println("입력하신 값은 " + input + "입니다.");
+
+		for(int i=10; i > 0; i--) {
+			System.out.println(i);
+			try {
+				Thread.sleep(1000);
+			} catch(Exception e ) {}
+		}
+	}
+}
+```
+입력이 먼저 존재할 때, 입력을 마치기 전에는 출력이 되지 않는다.
+
+## 13 쓰레드의 I/O 블락킹(blocking) 예제 2
+```java
+class ThreadEx7 {
+	public static void main(String[] args) throws Exception 	{
+		ThreadEx7_1 th1 = new ThreadEx7_1();
+		th1.start();
+
+		String input = JOptionPane.showInputDialog("아무 값이나 입력하세요."); 
+		System.out.println("입력하신 값은 " + input + "입니다.");
+	}
+}
+
+class ThreadEx7_1 extends Thread {
+	public void run() {
+		for(int i=10; i > 0; i--) {
+			System.out.println(i);
+			try {
+				sleep(1000);
+			} catch(Exception e ) {}
+		}
+	}
+}
+```
+쓰레드를 두 개로 나누어 처리하면 입력을 기다리면서도 출력이 계속 된다.
+
+## 14 쓰레드의 우선순위
+쓰레드는 우선순위라는 속성(멤버변수)를 가지고 있다. 이 우선순위 값에 따라 쓰레드가 얻는 실행시간이 달라진다.
+예시로 파일전송기능이 있는 메신저의 경우 파일다운로드보다 채팅의 우선순위 높아야 편할 것이다. 시각적이거나 빠르게 반응해야하는 작업들은 우선순위를 보통 높게 잡아야 한다.
+
+### 우선순위 지정하기
+```Java
+void setPriority(int newPriority)   // 우선순위 변경
+int getPriority()                   // 우선순위 반환
+```
+
+- 쓰레드가 가질 수 있는 우선순위는 1~10이다. 숫자가 높을수록 우선순위가 높다.
+- 쓰레드의 우선순위는 생성한 쓰레드로부터 상속받는다. 
+  - main 메서드를 수행하는 쓰레드는 우선순위가 5이므로 main에서 생성 시 기본으로 5가 된다.
