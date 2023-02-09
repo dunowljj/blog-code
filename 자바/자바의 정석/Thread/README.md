@@ -384,4 +384,171 @@ class ThreadEx13_2 extends Thread {
 - while문을 !isInterrupted()로 막아놓고, interrupt 호출하는 경우
 - interrupt() 호출 시 종료 문구가 출력하게 구현
 
+## 26-27 suspend(), resume(), stop()
+- suspend()는 sleep()처럼 쓰레드를 멈추게 하며, resume()을 호출해야 다시 실행대기 상태가 된다.
+- stop()은 호출 즉시 쓰레드가 종료된다.
+
+suspend()와 stop()이 교착상태를 일으키기 쉽게 되어 있어 deprecated 되었다.
+> stop(Throwable obj) 는 자바 11에서 제거되었다. stop()의 제거 계획은 아직 없는듯 하다고 이펙티브 자바에서 말한다.
+
+## 28 join()과 yield()
+### join()
+- 쓰레드 자신이 하던 작업을 잠시 멈추고, 다른 쓰레드가 지정된 시간동안 작업을 수행하도록 한다.
+- sleep과 마찬가지로 interrupt()에 의해 대기상태에서 벗어날 수 있다.
+- sleep과 유사하나 현재 쓰레드가 아닌 특정 쓰레드에 대해 동작한다.(static이 아님)
+- 시간을 지정하지 않으면 해당 쓰레드가 작업을 모두 마칠때까지 기다린다.
+
+### yield()
+- 자신에게 주어진 실행시간을 다음 차례 쓰레드에게 양보한다.
+- 1초 할당받았는데 0.5초가 남은 경우, 포기하고 다시 실행대기 상태가 된다.
+
+## 29 join()과 yield() 예제
+
+```java
+class ThreadEx19 {
+	static long startTime = 0;
+
+	public static void main(String args[]) {
+		ThreadEx19_1 th1 = new ThreadEx19_1();
+		ThreadEx19_2 th2 = new ThreadEx19_2();
+
+		th1.start();
+		th2.start();
+		startTime = System.currentTimeMillis();
+
+		try {
+			th1.join();	// main쓰레드가 th1의 작업이 끝날 때까지 기다린다.
+			th2.join();	// main쓰레드가 th2의 작업이 끝날 때까지 기다린다.
+		} catch(InterruptedException e) {}
+
+		System.out.print("소요시간:" + (System.currentTimeMillis() - ThreadEx19.startTime));
+	} // main
+}
+
+class ThreadEx19_1 extends Thread {
+	public void run() {
+		for(int i=0; i < 300; i++) {
+			System.out.print(new String("-"));
+		}
+	} // run()
+}
+
+class ThreadEx19_2 extends Thread {
+	public void run() {
+		for(int i=0; i < 300; i++) {
+			System.out.print(new String("|"));
+		}
+	} // run()
+}
+
+```
+join()으로 인해 main쓰레드가 th1, th2의 작업이 끝날때까지 기다린다. main쓰레드의 소요시간이 가장 마지막에 찍힌다.
+책에 yield() 예제라고도 써있는데 해당 내용이 없다.
+
+
+## 30 쓰레드의 동기화(synchronization)
+한 쓰레드가 진행중인 작업을 다른 쓰레드가 간섭하지 못하게 막는 것을 '쓰레드의 동기화'라고 한다.
+멀티쓰레드 프로세스의 경우 여러 쓰레드가 같은 프로세스 내의 자원을 공유해서 작업하기 때문에 서로의 작업에 영향을 주게 된다.
+그것을 방지하게 도입된 개념이 바로 **'임계 영역(critical section)'**과 **'잠금(락, lock)'**이다.
+
+자바에서는 synchronized블럭을 이용해서 쓰레드의 동기화를 지원했지만, 
+JDK1.5부터는 java.util.concurrent.locks와 java.util.concurrent.atomic 패키지를 통해서 다양한 방식으로 동기화를 구현 가능하다.
+- atomic 패키지에서는 락 없이 스레드 안전한 프로그램을 만들게 해준다. AtomicLong 등을 지원한다. 자바에서 원래 long과 double타입은 변수를 읽고 쓰는데 원자성을 지원하지 않는다. 
+
+### critical section과 lock
+- **공유 데이터**를 사용하는 코드 영역을 **임계 영역**으로 지정해놓고,
+공유 데이터(객체)가 가지고 있는 **lock**을 획득한 단 하나의 쓰레드만 이 영역 내의 코드를 수행할 수 있게 된다.
+- 해당 쓰레드가 모든 코드를 수행하고 벗어나서 lock을 반납해야만 다른 쓰레드가 반납된 lock을 획득하여 임계 영역의 코드를 수행할 수 있다.
+
+## 31 synchronized를 이용한 동기화
+synchronized로 임계 영역을 설정할 수 있다. 두 가지 방식이 있다.
+    
+    1. 메서드 전체를 임계 영역으로 지정
+      public synchronized void calcSum() {
+          .../
+      }
+
+    2. 특정한 영역을 임계 영역으로 지정 
+      synchronized(객체의 참조변수) {
+          .../
+      }
+
+1번 - 메서드 앞에 사용
+- 메서드 전체를 임계 영역으로 설정한다.
+- **synchronized메서드가 호출된 시점**부터 해당 메서드가 포함된 **객체의 lock**을 얻어 작업을 수행하다가 **메서드가 종료**되면 lock을 반환한다.
+
+2번 - 특정 영역 지정
+- 참조변수는 lock을 걸고자 하는 객체를 참조해야 한다.
+- **블럭 안에 들어가면서부터** 쓰레드는 **지정된 객체의 lock**을 얻는다. **블럭**을 벗어나면 lock을 반납한다.
+- lock이 있는 쓰레드만 임계 영역 코드를 수행하며, **다른 쓰레드들은 lock을 얻을때까지 기다리게 된다.**
+- 성능을 생각해 임계 영역을 최소화하는게 좋다.
+
+## 32-33 synchronized를 이용한 동기화 예제 1,2
+```java
+class ThreadEx21 {
+	public static void main(String args[]) {
+		Runnable r = new RunnableEx21();
+		new Thread(r).start(); // ThreadGroup에 의해 참조되므로 gc대상이 아니다.
+		new Thread(r).start(); // ThreadGroup에 의해 참조되므로 gc대상이 아니다.
+	}
+}
+
+class Account {
+	private int balance = 1000;
+
+	public  int getBalance() {
+		return balance;
+	}
+
+	public void withdraw(int money){ // synchronized 붙이기!
+		if(balance >= money) {
+			try { Thread.sleep(1000);} catch(InterruptedException e) {}
+			balance -= money;
+		}
+	} // withdraw
+}
+
+class RunnableEx21 implements Runnable {
+	Account acc = new Account();
+
+	public void run() {
+		while(acc.getBalance() > 0) {
+			// 100, 200, 300중의 한 값을 임으로 선택해서 출금(withdraw)
+			int money = (int)(Math.random() * 3 + 1) * 100;
+			acc.withdraw(money);
+			System.out.println("balance:"+acc.getBalance());
+		}
+	} // run()
+}
+```
+- 은행 계좌에서 출금하는데, 랜덤으로 정해진 금액으로 출금한다.
+- 출금 메서드에서 출금직전에 출금하려는 금액만큼 잔고가 있는지 확인하고, 잔고가 더 작다면 출금을 하지 않는다.
+- 2개의 쓰레드에서 동시에 출금작업을 지속한다.
+
+원래는 잔고의 출력 결과가 0 이하는 나오지 않아야한다. 하지만 if문 내부에서 한 쓰레드가 작업하고 있을때, 다른 쓰레드가 if문을 통과해버릴수 있다.
+withdraw 메서드를 synchronized 선언한다면 잔고가 0미만으로 떨어지지 않게 할 수 있다.
+
+## 34 wait()과 notify()
+특정 쓰레드가 객체의 락을 가진 상태로 오랜 시간을 보낸다면, 다른 쓰레드들은 해당 객체의 락을 기다리느라 다른 작업을 하지 못할 것이다.
+이런 상황을 개선하는게 wait()과 notify()이다.
+
+### wait()
+- 작업을 진행할 상황이 아니면, 쓰레드가 락을 반납하고 기다리게 한다. 해당 객체의 대기실(waiting pool)에서 통지를 기다린다.
+- 다른 쓰레드가 작업을 할 수 있게 된다.
+### notify()
+- 다시 락을 얻어 작업을 할 수 있게 한다. 호출 시 해당 객체의 대기실에 있던 모든 쓰레드 중에서 임의의 쓰레드만 통지를 받는다.
+- 락을 얻는다고 해서 즉시 실행을 보장하는 것은 아니다. 실행가능 상태가 되는 것이다.
+- notifyAll()
+  - 기다리고 있는 모든 쓰레드에게 통보를 한다.
+  - 하지만 lock을 얻을 수 있는 것은 하나의 쓰레드일 뿐이라 나머지는 lock을 기다려야 한다.
+  - 호출된 객체의 waiting pool에 대기 중인 쓰레드에만 적용된다.
+
+어짜피 가져가게 락은 하난데 왜 이게 필요하지? 라는 생각이 들었다. 기다리고 있는 여러 쓰레드에 대해 해당 작업이 끝났음을 모두 알려야하는 경우 사용한다고 한다.
+락이 하나이더라도 실행가능하다는 것을 알려야하는 경우는 있다고 이해했다. notifyAll()도 필요한 메서드라고 한다.
+
+## 35-36 wait()와 notify() 예제 1,2
+Table을 공유 자원으로 Cook은 요리를 만들고, Customer은 요리를 먹는다. Table의 음식을 제거하는 메서드, 생성하는 메서드는 각각 synchronized 처리가 되어 있다.
+- 예제 1에서는 작업 수행이 불가능할때, sleep()하도록 되어 있다. lock을 가진채로 놓아주지 않아서 원활하게 로직이 진행되지 않는다.
+- 예제 2에서는 wait()과 notify()를 추가하여 원활하게 작동한다. wait()은 lock을 놓아주기 때문이다. 하지만 해당 코드도 notify()로 어떤 쓰레드를 깨울지 모르기 때문에 비효율적인 측면이 있다.
+
 
